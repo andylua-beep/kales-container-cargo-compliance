@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Container &amp; Flatbed Semi-Trailer Compliance Checker — CBM &amp; Axle | KALES</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="studio">
+    <header class="studio-header">
+      <div>
+        <div class="brand-kicker">KALES SEMI-TRAILER ROAD COMPLIANCE CHECKER</div>
+        <h1>Container, Flatbed &amp; Dry Van Semi-Trailer Compliance Checker — Local Axle, CBM &amp; Road Laws</h1>
+      </div>
+      <div class="header-actions no-print">
+        <button id="btnSavePreset" class="btn-secondary" type="button">Save project</button>
+        <button id="btnPrintSpec" class="btn-secondary" type="button">Print spec sheet</button>
+        <a id="headerPrimaryCta" href="https://www.kalestruck.com/product-category/trailers/container-bulk-transport/?utm_source=chrome-extension&utm_medium=referral&utm_campaign=cargo" target="_blank" rel="noopener" class="btn-primary">KALES catalog ↗</a>
+      </div>
+    </header>
+
+    <form class="controls no-print" id="configForm" autocomplete="off">
+      <section class="card">
+        <h2><span class="step">01</span> Market &amp; regulation</h2>
+        <label class="field">
+          <span>Operating market</span>
+          <select id="region" name="region"></select>
+        </label>
+        <p class="card-note" id="regionSource"></p>
+      </section>
+
+      <section class="card">
+        <h2><span class="step">02</span> Category &amp; trailer</h2>
+        <div class="category-tabs" id="categoryGroup" role="group" aria-label="Semi-trailer category"></div>
+        <div class="chip-grid" id="modelGroup" role="group" aria-label="Trailer model"></div>
+        <label class="field">
+          <span>Tractor</span>
+          <select id="tractor" name="tractor"></select>
+        </label>
+        <label class="field">
+          <span>Tractor fifth-wheel height <em>mm</em></span>
+          <input type="number" id="fifthWheelMm" name="fifthWheelMm" step="10" inputmode="numeric" />
+          <small class="hint" id="hint-fifthWheelMm"></small>
+        </label>
+        <div class="row-2">
+          <label class="field">
+            <span>Trailer length <em>m</em></span>
+            <input type="number" id="lengthM" name="lengthM" step="0.1" inputmode="decimal" />
+            <small class="hint" id="hint-lengthM"></small>
+          </label>
+          <label class="field">
+            <span>Rear overhang <em>m</em></span>
+            <input type="number" id="rearOverhangM" name="rearOverhangM" step="0.05" inputmode="decimal" />
+            <small class="hint" id="hint-rearOverhangM"></small>
+          </label>
+        </div>
+        <label class="field">
+          <span>Deck / twist-lock height <em>mm</em></span>
+          <input type="number" id="deckMm" name="deckMm" step="10" inputmode="numeric" />
+          <small class="hint" id="hint-deckMm"></small>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2><span class="step">03</span> Running gear</h2>
+        <label class="field">
+          <span>Suspension</span>
+          <select id="suspension" name="suspension"></select>
+        </label>
+        <div class="row-2">
+          <label class="field">
+            <span>Axles</span>
+            <input type="number" id="axles" name="axles" step="1" inputmode="numeric" />
+            <small class="hint" id="hint-axles"></small>
+          </label>
+          <label class="field">
+            <span>Axle spacing <em>m</em></span>
+            <input type="number" id="spacingM" name="spacingM" step="0.01" inputmode="decimal" />
+            <small class="hint" id="hint-spacingM"></small>
+          </label>
+        </div>
+        <label class="field">
+          <span>Tyres</span>
+          <select id="tyre" name="tyre"></select>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2><span class="step">04</span> Cargo &amp; body</h2>
+        <div class="row-2 is-hidden" id="dryvanVolumeRow">
+          <label class="field">
+            <span>Target box volume <em>m³</em></span>
+            <input type="number" id="targetCbm" name="targetCbm" step="0.5" list="dryvanCbmPresets" inputmode="decimal" />
+            <datalist id="dryvanCbmPresets">
+              <option value="65"></option><option value="75"></option><option value="80"></option>
+              <option value="85"></option><option value="90"></option><option value="95"></option>
+            </datalist>
+            <small class="hint" id="hint-targetCbm"></small>
+          </label>
+          <label class="field">
+            <span>Light cargo density <em>t/m³</em></span>
+            <input type="number" id="cargoDensityT" name="cargoDensityT" step="0.02" list="dryvanDensityPresets" inputmode="decimal" />
+            <datalist id="dryvanDensityPresets">
+              <option value="0.12"></option><option value="0.18"></option><option value="0.22"></option>
+              <option value="0.28"></option><option value="0.35"></option><option value="0.45"></option>
+            </datalist>
+            <small class="hint" id="hint-cargoDensityT"></small>
+          </label>
+        </div>
+        <div class="row-2">
+          <label class="field">
+            <span id="payloadLabel">Cargo payload <em>t</em></span>
+            <input type="number" id="payloadT" name="payloadT" step="0.5" inputmode="decimal" />
+            <small class="hint" id="hint-payloadT"></small>
+          </label>
+          <label class="field is-hidden" id="wallField">
+            <span id="wallLabel">Sidewall / box height <em>mm</em></span>
+            <input type="number" id="wallMm" name="wallMm" step="50" inputmode="numeric" />
+            <small class="hint" id="hint-wallMm"></small>
+          </label>
+        </div>
+        <label class="field" id="containerField">
+          <span>ISO container load</span>
+          <select id="container" name="container"></select>
+        </label>
+      </section>
+
+    </form>
+
+    <main class="results">
+      <section id="verdict" class="verdict st-ok" aria-live="polite">
+        <h2 id="verdictTitle"></h2>
+        <p id="verdictText"></p>
+        <p class="verdict-meta" id="verdictMeta"></p>
+      </section>
+
+      <div class="svg-stage" id="svgStage"></div>
+
+      <div class="kpi-grid" id="kpis"></div>
+
+      <section class="card">
+        <h2>Checks</h2>
+        <div id="checksTables"></div>
+      </section>
+
+      <section class="card">
+        <h2>Regulation basis</h2>
+        <p><strong id="regionName"></strong> <span class="badge" id="regionBadge"></span></p>
+        <p class="card-note" id="regionSourceFull"></p>
+        <ul class="region-notes" id="regionNotes"></ul>
+        <p class="disclaimer">Static engineering estimate: equalised axle group, evenly spread cargo, nominal tare. Each market is labelled with how its figures were sourced (official text, secondary source, not yet in force) — always confirm with the local authority and the final KALES drawing before quoting.</p>
+      </section>
+
+      <section class="card">
+        <div class="match">
+          <div>
+            <strong id="matchedModelTitle"></strong>
+            <p class="card-note" id="matchedModelDesc"></p>
+          </div>
+          <a id="matchedModelUrl" href="https://www.kalestruck.com/product-category/trailers/flatbed-semi-trailer/?utm_source=chrome-extension&utm_medium=referral&utm_campaign=cargo" target="_blank" rel="noopener" class="btn-primary">View KALES specs ↗</a>
+        </div>
+        <nav class="catalog-links" aria-label="KALES cargo categories">
+          <a href="https://www.kalestruck.com/?utm_source=chrome-extension&utm_medium=referral&utm_campaign=cargo" target="_blank" rel="noopener">KALES Home</a>
+          <a href="https://www.kalestruck.com/product-category/trailers/container-bulk-transport/?utm_source=chrome-extension&utm_medium=referral&utm_campaign=cargo" target="_blank" rel="noopener">Container &amp; Bulk Transport</a>
+          <a href="https://www.kalestruck.com/product-category/trailers/skeletal-trailer/?utm_source=chrome-extension&utm_medium=referral&utm_campaign=cargo" target="_blank" rel="noopener">Skeletal Trailer</a>
+          <a href="https://www.kalestruck.com/product-category/trailers/flatbed-semi-trailer/?utm_source=chrome-extension&utm_medium=referral&utm_campaign=cargo" target="_blank" rel="noopener">Flatbed Semi Trailer</a>
+          <a href="https://www.kalestruck.com/product-category/trailers/sidewall-semi-trailer/?utm_source=chrome-extension&utm_medium=referral&utm_campaign=cargo" target="_blank" rel="noopener">Sidewall Trailer</a>
+          <a href="https://www.kalestruck.com/product-category/trailers/fence-trailers/?utm_source=chrome-extension&utm_medium=referral&utm_campaign=cargo" target="_blank" rel="noopener">Fence Trailers</a>
+          <a href="https://www.kalestruck.com/product-category/trailers/dryvan-transport/?utm_source=chrome-extension&utm_medium=referral&utm_campaign=cargo" target="_blank" rel="noopener">DryVan Transport</a>
+          <a href="https://www.kalestruck.com/product-category/trailers/dryvan/?utm_source=chrome-extension&utm_medium=referral&utm_campaign=cargo" target="_blank" rel="noopener">DryVan Box</a>
+        </nav>
+      </section>
+
+      <section class="card no-print">
+        <h2>Saved plans</h2>
+        <ul class="preset-list" id="savedPresetsList"></ul>
+      </section>
+    </main>
+  </div>
+  <script src="app.bundle.js"></script>
+</body>
+</html>
